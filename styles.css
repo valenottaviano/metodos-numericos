@@ -1,0 +1,33 @@
+/* Example CSS styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #de0000;
+}
+
+/* Style for Add Data and Reset Table buttons */
+button#add-data-btn,
+button#reset-table-btn {
+    margin-top: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button#add-data-btn:hover,
+button#reset-table-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Style for the input fields */
+input[type="number"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
