@@ -7,12 +7,7 @@ Este repositorio contiene el código fuente de una aplicación web desarrollada 
 El objetivo principal de este proyecto es proporcionar una herramienta interactiva que permita a los usuarios realizar interpolación polinómica de forma rápida y sencilla. La interpolación polinómica es un método importante en el análisis numérico y se utiliza comúnmente en diversas aplicaciones, como la aproximación de funciones y la predicción de datos faltantes.
 
 ## Funcionalidades Principales
-
-- **Interpolación Lineal**: Permite realizar interpolación lineal a partir de un conjunto de puntos de datos.
-
-- **Interpolación Polinómica de Lagrange**: Implementa el método de interpolación de Lagrange para calcular un polinomio interpolante.
-
-- **Interpolación Polinómica de Newton**: Implementa el método de interpolación de Newton para calcular un polinomio interpolante y muestra la forma de diferencias divididas.
+n/a
 
 ## Uso
 
