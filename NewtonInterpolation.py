@@ -33,9 +33,18 @@ class NewtonInterpolation:
         return result
     
     def plot_interpolation(self, x_range):
-        """Plot the interpolated polynomial for a range of x values."""
+        """Plot the interpolated polynomial for a range of x values and return the polynomial."""
         coefficients = self.calculate_coefficients()
         y_values = []
+
+        polynomial_expression = "P(x) = "
+        for i in range(len(coefficients)):
+            coefficient = coefficients[i]
+            polynomial_expression += f"{coefficient:.2f}"
+            for j in range(i):
+                polynomial_expression += f" * (x - {self.data[j][0]:.2f})"
+            if i < len(coefficients) - 1:
+                polynomial_expression += " + "
 
         for x in x_range:
             result = coefficients[-1]
@@ -43,13 +52,15 @@ class NewtonInterpolation:
                 result = result * (x - self.data[i][0]) + coefficients[i]
             y_values.append(result)
 
-        plt.plot(x_range, y_values)
+        plt.plot(x_range, y_values, label="Interpolated Polynomial", color='blue')
         plt.scatter(*zip(*self.data), label="Data Points", color='red', marker='o')
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.legend()
         plt.title('Newton Interpolation')
         plt.show()
+
+        return polynomial_expression
 
 
 
