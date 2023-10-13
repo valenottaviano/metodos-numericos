@@ -1,14 +1,14 @@
 
 class NewtonInterpolation:
     def __init__(self):
-        self.data = []  # Lista para almacenar los puntos de datos (x, y)
+        self.data = []  # List to store data points (x, y)
 
     def add_data_point(self, x, y):
-        """Agrega un punto de datos (x, y) al conjunto."""
+        """Add a data point (x, y) to the set."""
         self.data.append((x, y))
 
     def calculate_coefficients(self):
-        """Calcula los coeficientes a_i usando diferencias divididas."""
+        """Calculate the coefficients a_i using divided differences."""
         n = len(self.data)
         coefficients = [y for x, y in self.data]
 
@@ -19,7 +19,7 @@ class NewtonInterpolation:
         return coefficients
 
     def interpolate(self, x):
-        """Interpola el valor de y para un valor de x dado."""
+        """Interpolate the y value for a given x value."""
         coefficients = self.calculate_coefficients()
         n = len(coefficients)
         result = coefficients[n - 1]
@@ -28,5 +28,6 @@ class NewtonInterpolation:
             result = result * (x - self.data[i][0]) + coefficients[i]
 
         return result
+
 
 
