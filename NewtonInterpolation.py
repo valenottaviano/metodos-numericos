@@ -1,67 +1,69 @@
-
-import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
 
 class NewtonInterpolation:
-    def __init__(self):
-        self.data = []  # Lista para almacenar los puntos de datos (x, y)
+    def __init__(self, dataframe):
+        self.x_values = dataframe['X'].tolist()
+        self.y_values = dataframe['Y'].tolist()
+        self.divided_differences = self.calculate_divided_differences()
 
-    def add_data_point(self, x, y):
-        """Agrega un punto de datos (x, y) al conjunto."""
-        self.data.append((x, y))
+    def calculate_divided_differences(self):
+        n = len(self.x_values)
+        divided_differences = [[0] * n for _ in range(n)]
 
-    def calculate_coefficients(self):
-        """Calcula los coeficientes a_i usando diferencias divididas."""
-        n = len(self.data)
-        coefficients = [y for x, y in self.data]
+        for i in range(n):
+            divided_differences[i][0] = self.y_values[i]
 
         for j in range(1, n):
-            for i in range(n - 1, j - 1, -1):
-                coefficients[i] = (coefficients[i] - coefficients[i - 1]) / (self.data[i][0] - self.data[i - j][0])
+            for i in range(n - j):
+                divided_differences[i][j] = (divided_differences[i + 1][j - 1] - divided_differences[i][j - 1]) / (self.x_values[i + j] - self.x_values[i])
 
-        return coefficients
+        return divided_differences
 
-    def interpolate(self, x):
-        """Interpola el valor de y para un valor de x dado."""
-        coefficients = self.calculate_coefficients()
-        n = len(coefficients)
-        result = coefficients[n - 1]
+    def interpolate(self, x_interpolate):
+        interpolated_values = []
+        
+        for x_interp in x_interpolate:
+            y_interp = self._calculate_interpolated_value(x_interp)
+            interpolated_values.append((x_interp, y_interp))
+        
+        interpolated_df = pd.DataFrame(interpolated_values, columns=['X', 'Y'])
+        return interpolated_df
 
-        for i in range(n - 2, -1, -1):
-            result = result * (x - self.data[i][0]) + coefficients[i]
+    def _calculate_interpolated_value(self, x_interp):
+        n = len(self.x_values)
+        y_interp = self.divided_differences[0][0]
+        temp = 1.0
 
-        return result
-    
-    def plot_interpolation(self, x_range):
-        """Plot the interpolated polynomial for a range of x values and return the polynomial."""
-        coefficients = self.calculate_coefficients()
-        y_values = []
+        for i in range(1, n):
+            temp *= (x_interp - self.x_values[i - 1])
+            y_interp += temp * self.divided_differences[0][i]
 
-        polynomial_expression = "P(x) = "
-        for i in range(len(coefficients)):
-            coefficient = coefficients[i]
-            polynomial_expression += f"{coefficient:.2f}"
+        return y_interp
+
+    def latex_interpolation_expression(self):
+        expression = r"P(x)= "
+        raw_expression = r"P(x)= "
+        
+        for i in range(len(self.x_values)):
+            term = self.divided_differences[0][i]
+            term_str = str(round(term,2))
+            
             for j in range(i):
-                polynomial_expression += f" * (x - {self.data[j][0]:.2f})"
-            if i < len(coefficients) - 1:
-                polynomial_expression += " + "
-
-        for x in x_range:
-            result = coefficients[-1]
-            for i in range(len(coefficients) - 2, -1, -1):
-                result = result * (x - self.data[i][0]) + coefficients[i]
-            y_values.append(result)
-
-        plt.plot(x_range, y_values, label="Interpolated Polynomial", color='blue')
-        plt.scatter(*zip(*self.data), label="Data Points", color='red', marker='o')
-        plt.xlabel('X')
-        plt.ylabel('Y')
-        plt.legend()
-        plt.title('Newton Interpolation')
-        plt.show()
-
-        return polynomial_expression
-
-
-
-
+                term_str += r" \cdot (x - " + str(round(self.x_values[j], 2)) + r")"
+            
+            raw_expression += term_str
+            
+            if i < 4:
+                expression += term_str
+            
+            if i < len(self.x_values) - 1:
+                raw_expression += r" + "
+            
+            if i < 3:
+                expression += r" + "
+        
+        if len(self.x_values) > 4:
+            expression += r"\cdots"
+        
+        
+        return expression, raw_expression
